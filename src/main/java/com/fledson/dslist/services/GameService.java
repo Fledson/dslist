@@ -1,16 +1,15 @@
 package com.fledson.dslist.services;
 
+import com.fledson.dslist.dto.GameDTO;
 import com.fledson.dslist.dto.GameMinDTO;
 import com.fledson.dslist.entities.Game;
 import com.fledson.dslist.repositories.GameRepository;
+import com.fledson.dslist.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -25,4 +24,10 @@ public class GameService {
         return list.stream().map(GameMinDTO::new).toList();
     }
 
+    @Transactional(readOnly = true)
+    public GameDTO findbyId(Long id) {
+        Game game = repository.findById(id)
+                                .orElseThrow( () -> new ResourceNotFoundException("Game not found"));
+        return new GameDTO(game);
+    }
 }
