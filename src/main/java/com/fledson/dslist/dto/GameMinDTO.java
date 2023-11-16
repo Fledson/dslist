@@ -2,6 +2,7 @@ package com.fledson.dslist.dto;
 
 import com.fledson.dslist.entities.Game;
 import com.fledson.dslist.projections.GameMinProjection;
+import org.springframework.beans.BeanUtils;
 
 public class GameMinDTO {
     private Long id;
@@ -25,7 +26,7 @@ public class GameMinDTO {
     public GameMinDTO(GameMinProjection projection) {
         id = projection.getId();
         title = projection.getTitle();
-        year = projection.getYear();
+        year = projection.getGameYear();
         imgUrl = projection.getImgUrl();
         shortDescription = projection.getShortDescription();
     }
