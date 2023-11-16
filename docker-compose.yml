@@ -1,0 +1,51 @@
+version: "3.7"
+# Serviços que vão rodar ao iniciar o docker-compose
+services:
+  ########################
+  #### POSTGRES SERVER
+  ########################
+  pg-docker:
+    # IMAGEM QUE QUERO BAIXAR
+    image: postgres:14-alpine
+    # NOME DO CONTAINER
+    container_name: dev-postgresql
+    # VARIÁVEIS DA INSTANCIA
+    environment:
+      POSTGRES_DB: dslist
+      POSTGRES_PASSWORD: 1234567
+    # MAPEAMENTO DE PORTAS
+    ports:
+      # MAQUINA - CONTAINER
+      - "5433:5432"
+    # SALVAR OS ARQUIVOS NA MAQUINA
+    volumes:
+      - ./.data/postgresql/data:/var/lib/postgresql/data
+    # REDE DOS CONTAINERS
+    networks:
+      - dev-network
+
+  ########################
+  #### PG ADMIN
+  ########################
+  pgadmin-docker:
+    image: dpage/pgadmin4
+    container_name: dev-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: me@exemple.com
+      PGADMIN_DEFAULT_PASSWORD: 1234567
+    ports:
+      - "5050:80"
+    volumes:
+      - ./.data/pgadmin:/var/lib/pgadmin
+    # INFORMA DEPENDENCIA A OUTRO CONTAINER
+    depends_on:
+      - pg-docker
+    networks:
+      - dev-network
+
+  ########################
+  #### CONFIG DE REDE
+  ########################
+networks:
+  dev-network:
+    driver: bridge
